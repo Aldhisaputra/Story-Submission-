@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Submission Intermediet</string>
+    <string name="login">Masuk</string>
+    <string name="message_welcome_page">Mau belajar Android, iOS, Machine Learning, Cloud, Front-End, Back-End, dan bidang IT lainnya? Di Dicoding aja!</string>
+    <string name="title_welcome_page">Selamat datang di Dicoding!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="name">Nama</string>
+    <string name="message_main_page">Selamat Belajar di Dicoding.</string>
+    <string name="logout">Keluar</string>
+    <string name="image">image</string>
+    <string name="description">description</string>
+    <string name="take_foto">Take Foto</string>
+    <string name="gallery">Gallery</string>
+    <string name="upload">Upload</string>
+    <string name="story">Story</string>
+    <string name="register">Register</string>
+    <string name="add_story">add_story</string>
+</resources>
