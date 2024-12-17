@@ -21,18 +21,32 @@
         android:layout_marginTop="16dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:contentDescription="@string/map"
+        android:src="@drawable/map"
+        app:backgroundTint="@color/blue"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@id/btnLogout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.954" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:contentDescription="@string/logout"
         android:src="@drawable/baseline_exit_to_app_24"
-    app:backgroundTint="@color/blue"
-    app:fabSize="normal"
-    app:layout_constraintBottom_toTopOf="@id/add"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.954"
-    app:layout_constraintStart_toStartOf="parent" />
+        app:backgroundTint="@color/blue"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@id/add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.954" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add"

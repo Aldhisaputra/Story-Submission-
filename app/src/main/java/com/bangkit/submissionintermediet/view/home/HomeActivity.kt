@@ -6,12 +6,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bangkit.submissionintermediet.R
 import com.bangkit.submissionintermediet.Results
 import com.bangkit.submissionintermediet.ViewModelFactory
 import com.bangkit.submissionintermediet.adapter.StoryAdapter
 import com.bangkit.submissionintermediet.dataStore
 import com.bangkit.submissionintermediet.databinding.ActivityHomeBinding
+import com.bangkit.submissionintermediet.map.MapsActivity
 import com.bangkit.submissionintermediet.preference.UserPreference
 import com.bangkit.submissionintermediet.view.addstrory.AddStoryActivity
 import com.bangkit.submissionintermediet.view.main.MainActivity
@@ -30,6 +30,10 @@ class HomeActivity : AppCompatActivity() {
 
         setupRecyclerView()
         observeStories()
+
+        binding.btnMap.setOnClickListener {
+            startActivity(Intent(this, MapsActivity::class.java))
+        }
 
         binding.add.setOnClickListener { startActivity(Intent(this, AddStoryActivity::class.java)) }
 
