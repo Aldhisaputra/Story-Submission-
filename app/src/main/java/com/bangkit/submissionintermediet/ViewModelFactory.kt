@@ -5,8 +5,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bangkit.submissionintermediet.di.Injection
+import com.bangkit.submissionintermediet.view.map.MapsViewModel
 import com.bangkit.submissionintermediet.repository.Repository
-import com.bangkit.submissionintermediet.view.addstrory.AddStoryViewModel
+import com.bangkit.submissionintermediet.view.addstory.AddStoryViewModel
 import com.bangkit.submissionintermediet.view.detail.DetailViewModel
 import com.bangkit.submissionintermediet.view.home.HomeViewModel
 import com.bangkit.submissionintermediet.view.login.LoginViewModel
@@ -25,18 +26,19 @@ class ViewModelFactory private constructor(
         HomeViewModel::class.java -> HomeViewModel(repository) as T
         DetailViewModel::class.java -> DetailViewModel(repository) as T
         AddStoryViewModel::class.java -> AddStoryViewModel(repository) as T
+        MapsViewModel::class.java -> MapsViewModel(repository) as T
+
+
         else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 
     companion object {
         @Volatile
         private var instance: ViewModelFactory? = null
-
         fun getInstance(context: Context): ViewModelFactory =
             instance ?: synchronized(this) {
-                instance ?: ViewModelFactory(
-                    Injection.provideAppRepository(context)
-                )
+                instance ?: ViewModelFactory(Injection.provideRepository(context))
             }.also { instance = it }
     }
+
 }

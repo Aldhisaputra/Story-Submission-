@@ -1,4 +1,4 @@
-package com.bangkit.submissionintermediet.view.addstrory
+package com.bangkit.submissionintermediet.view.addstory
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData

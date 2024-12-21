@@ -3,8 +3,16 @@ package com.bangkit.submissionintermediet.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.bangkit.submissionintermediet.api.ApiService
 import com.bangkit.submissionintermediet.Results
+import com.bangkit.submissionintermediet.pagging.StoryMediator
+import com.bangkit.submissionintermediet.pagging.StoryDatabase
+import com.bangkit.submissionintermediet.pagging.StoryEntity
 import com.bangkit.submissionintermediet.preference.UserPreference
 import com.bangkit.submissionintermediet.response.ListStoryItem
 import com.bangkit.submissionintermediet.response.LoginResponse
@@ -17,9 +25,10 @@ import okhttp3.RequestBody
 import retrofit2.HttpException
 import java.io.IOException
 
-class Repository(
+open class Repository(
     private val apiService: ApiService,
-    private val preference: UserPreference
+    private val preference: UserPreference,
+    private val database: StoryDatabase,
 ) {
     suspend fun login(email: String, password: String): Results<LoginResponse> {
         return try {
@@ -43,21 +52,18 @@ class Repository(
         }
     }
 
-    fun getAllStories(): LiveData<Results<List<ListStoryItem>>> = liveData {
-        emit(Results.Loading)
-        try {
-            val token = preference.getToken().first()
-            val response = apiService.getAllStories(
-                token = "Bearer $token",
-                page = null,
-                size = null,
-                location = 0
-            )
-            emit(Results.Success(response.listStory))
-        } catch (e: Exception) {
-            emit(Results.Error(e.message.toString()))
-        }
+    fun getPagingStory(): LiveData<PagingData<StoryEntity>> = liveData {
+        val token = preference.getToken().first()
+        @OptIn(ExperimentalPagingApi::class)
+        emitSource(
+            Pager(
+                config = PagingConfig(pageSize = 5),
+                remoteMediator = token?.let { StoryMediator(database, apiService, it) },
+                pagingSourceFactory = { database.storyDao().getAllStory() }
+            ).liveData
+        )
     }
+
 
     fun getDetailStory(storyId: String): LiveData<Results<Story>> = liveData {
         emit(Results.Loading)
@@ -106,16 +112,30 @@ class Repository(
         }
     }
 
+    fun getAllStoryLocation(): LiveData<Results<List<ListStoryItem>>> = liveData {
+        emit(Results.Loading)
+        try {
+            val token = preference.getToken().first()
+            val response = apiService.getLocation(
+                token = "Bearer $token",
+                location = 1
+            )
+            emit(Results.Success(response.listStory))
+        } catch (e: Exception) {
+            emit(Results.Error(e.message.toString()))
+        }
+    }
 
     companion object {
         @Volatile
         private var instance: Repository? = null
         fun getInstance(
             apiService: ApiService,
-            pref: UserPreference
+            pref: UserPreference,
+            database: StoryDatabase
         ): Repository =
             instance ?: synchronized(this) {
-                instance ?: Repository(apiService, pref)
+                instance ?: Repository(apiService, pref, database)
             }.also { instance = it }
     }
 }

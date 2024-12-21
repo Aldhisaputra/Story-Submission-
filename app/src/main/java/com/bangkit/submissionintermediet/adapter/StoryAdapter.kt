@@ -1,32 +1,38 @@
 package com.bangkit.submissionintermediet.adapter
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bangkit.submissionintermediet.pagging.StoryEntity
 import com.bangkit.submissionintermediet.databinding.ListStoryBinding
-import com.bangkit.submissionintermediet.response.ListStoryItem
 import com.bangkit.submissionintermediet.view.detail.DetailActivity
 import com.bumptech.glide.Glide
 
-class StoryAdapter : ListAdapter<ListStoryItem, StoryAdapter.StoriesViewHolder>(DIFF_CALLBACK) {
+class StoryAdapter : PagingDataAdapter<StoryEntity, StoryAdapter.StoriesViewHolder>(DIFF_CALLBACK) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        StoriesViewHolder(ListStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoriesViewHolder {
+        val view = ListStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return StoriesViewHolder(view)
+    }
 
     override fun onBindViewHolder(holder: StoriesViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val storyEntity = getItem(position)
+        if (storyEntity != null) {
+            holder.bind(storyEntity)
+        }
     }
 
     inner class StoriesViewHolder(private val binding: ListStoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(story: ListStoryItem) {
+        fun bind(story: StoryEntity) {
             with(binding) {
                 listName.text = story.name
                 tvDescription.text = story.description
@@ -53,9 +59,22 @@ class StoryAdapter : ListAdapter<ListStoryItem, StoryAdapter.StoriesViewHolder>(
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
-            override fun areItemsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem) = oldItem.id == newItem.id
-            override fun areContentsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem) = oldItem == newItem
-        }
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<StoryEntity> =
+            object : DiffUtil.ItemCallback<StoryEntity>() {
+                override fun areItemsTheSame(
+                    oldItem: StoryEntity,
+                    newItem: StoryEntity
+                ): Boolean {
+                    return oldItem.id == newItem.id
+                }
+
+                @SuppressLint("DiffUtilEquals")
+                override fun areContentsTheSame(
+                    oldItem: StoryEntity,
+                    newItem: StoryEntity
+                ): Boolean {
+                    return oldItem == newItem
+                }
+            }
     }
 }

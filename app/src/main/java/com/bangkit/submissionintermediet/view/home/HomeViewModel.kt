@@ -2,10 +2,13 @@ package com.bangkit.submissionintermediet.view.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.bangkit.submissionintermediet.Results
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.bangkit.submissionintermediet.pagging.StoryEntity
 import com.bangkit.submissionintermediet.repository.Repository
-import com.bangkit.submissionintermediet.response.ListStoryItem
 
 class HomeViewModel(repository: Repository) : ViewModel() {
-    val getAllStories: LiveData<Results<List<ListStoryItem>>> = repository.getAllStories()
+    val getAllStory: LiveData<PagingData<StoryEntity>> = repository.getPagingStory()
+        .cachedIn(viewModelScope)
 }
